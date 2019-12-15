@@ -26,12 +26,22 @@ int main()
 		}
 	});
 
+	auto displayDetailsHandlerId = ep.DisplayDetails.add(
+		[&printLocker](const std::string& message) {
+		std::lock_guard<std::mutex> lock(printLocker);
+
+		std::cout << "Details Event- Message: "
+			<< message.c_str()
+			<< std::endl;
+	});
 
 	ep.ReceiveCharacter.add(streamHandler1);
 	ep.ReceiveCharacter.add(streamHandler2);
 	ep.Start();
 
 	getchar();
+
+	ep.DisplayDetails.remove_id(displayDetailsHandlerId);
 
 	ep.ReceiveCharacter.remove(streamHandler1);
 	ep.ReceiveCharacter.remove(streamHandler2);
