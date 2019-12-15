@@ -142,7 +142,7 @@ public:
 		return handler.id();
 	}
 
-	inline typename handler_type::handler_id_type add(const typename handler_type::handler_func_type& handler)
+	typename handler_type::handler_id_type add(const typename handler_type::handler_func_type& handler)
 	{
 		return add(handler_type(handler));
 	}
@@ -188,7 +188,7 @@ public:
 		return std::async(std::launch::async, [this](Args... asyncParams) { call(asyncParams...); }, params...);
 	}
 
-	inline void operator()(Args... params) const
+	void operator()(Args... params) const
 	{
 		call(params...);
 	}
