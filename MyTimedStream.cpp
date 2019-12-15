@@ -4,7 +4,7 @@
 #define DEFAULT_TIMER_INTERVAL 1000
 
 MyTimedStream::MyTimedStream()
-	: m_isRunning(false), m_millisecondsInterval(DEFAULT_TIMER_INTERVAL)
+	: isRunning(false), millisecondsInterval(DEFAULT_TIMER_INTERVAL)
 {
 }
 
@@ -15,30 +15,30 @@ MyTimedStream::~MyTimedStream()
 
 bool MyTimedStream::Start(unsigned int millisecondsInterval)
 {
-	if (m_isRunning)
+	if (isRunning)
 	{
 		return false;
 	}
 
-	m_isRunning = true;
-	m_millisecondsInterval = millisecondsInterval > 0 ? millisecondsInterval : DEFAULT_TIMER_INTERVAL;
-	m_timerThread = std::thread([this]() { TimedStreamFunc(); });
+	isRunning = true;
+	millisecondsInterval = millisecondsInterval > 0 ? millisecondsInterval : DEFAULT_TIMER_INTERVAL;
+	timerThread = std::thread([this]() { TimedStreamFunc(); });
 
 	return true;
 }
 
 bool MyTimedStream::Stop()
 {
-	if (!m_isRunning)
+	if (!isRunning)
 	{
 		return false;
 	}
 
-	m_isRunning = false;
+	isRunning = false;
 
-	if (m_timerThread.joinable())
+	if (timerThread.joinable())
 	{
-		m_timerThread.join();
+		timerThread.join();
 	}
 
 	return true;
@@ -46,12 +46,12 @@ bool MyTimedStream::Stop()
 
 void MyTimedStream::TimedStreamFunc()
 {
-	while (m_isRunning)
+	while (isRunning)
 	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(m_millisecondsInterval));
+		std::this_thread::sleep_for(std::chrono::milliseconds(millisecondsInterval));
 
 
-		if (m_isRunning)
+		if (isRunning)
 		{
 			Tick(alphabet[rand() % MAX]);
 		}

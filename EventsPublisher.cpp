@@ -3,10 +3,10 @@
 
 EventsPublisher::EventsPublisher()
 {
-	m_timer.Tick += [this](char c) {
+	timer.Tick.add([this](char c) {
 		std::cout << "Emitting " << c << std::endl;
 		ReceiveCharacter(c);
-	};
+	});
 }
 
 EventsPublisher::~EventsPublisher()
@@ -15,11 +15,11 @@ EventsPublisher::~EventsPublisher()
 
 void EventsPublisher::Start()
 {
-	m_timer.Start(1000); // 2 seconds interval
+	timer.Start(1000); // 1 second interval
 }
 
 void EventsPublisher::Stop()
 {
-	m_timer.Stop();
+	timer.Stop();
 }
 

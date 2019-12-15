@@ -1,7 +1,7 @@
 #ifndef __EVENTSPUBLISHER_H__
 #define __EVENTSPUBLISHER_H__
 
-#include "szevent.h"
+#include "eventlib.h"
 #include "MyTimedStream.h"
 
 class EventsPublisher
@@ -13,14 +13,14 @@ public:
 	void Start();
 	void Stop();
 
-	sz::event<char> ReceiveCharacter;
+	event<char> ReceiveCharacter;
 
 	// event of <message>.
-	sz::event<const std::string&> DisplayDetails;
+	event<const std::string&> DisplayDetails;
 
 private:
-	MyTimedStream m_timer;
-	unsigned int m_counter;
+	MyTimedStream timer;
+	unsigned int counter;
 };
 
 #endif // __EVENTSPUBLISHER_H__
