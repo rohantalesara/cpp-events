@@ -6,7 +6,7 @@ EventsPublisher::EventsPublisher()
 	timer.Tick.add([this](char c) {
 		std::cout << "Emitting " << c << std::endl;
 		ReceiveCharacter(c);
-	});
+	},[](char c){return true;});
 }
 
 EventsPublisher::~EventsPublisher()

@@ -16,12 +16,12 @@ public:
 	bool Stop();
 
 private:
-	int MAX = 26;
+	int MAX = 31;
 	void TimedStreamFunc();
 	bool isRunning;
 	unsigned int millisecondsInterval;
 	std::thread timerThread;
-	char alphabet[27] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; 
+	char alphabet[32] = "ABCDEFGHIJKLMNOPQRSTUVWXYZaeiou"; 
 };
 
 #endif // __MYTIMEDSTREAM_H__

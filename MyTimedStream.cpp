@@ -1,5 +1,4 @@
 #include "MyTimedStream.h"
-#include <cstring>
 
 #define DEFAULT_TIMER_INTERVAL 1000
 

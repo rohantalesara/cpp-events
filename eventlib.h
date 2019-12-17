@@ -8,30 +8,34 @@
 #include <atomic>
 #include <mutex>
 #include <future>
-
+#include <iostream>
 
 template <typename... Args> class event_handler
 {
 public:
 	//function that returns void but takes any number of arguments of any type
 	typedef std::function<void(Args...)> handler_func_type;
+	typedef std::function<bool(Args...)> condition_func_type;
 	typedef unsigned int handler_id_type;
+	condition_func_type conditionFunc;
 
-	event_handler(const handler_func_type& _handlerFunc)
-		: handlerFunc(_handlerFunc)
+
+	event_handler(const handler_func_type& _handlerFunc, const condition_func_type& _conditionFunc)
+		: handlerFunc(_handlerFunc), conditionFunc(_conditionFunc)
 	{
+		// std::cout<<"xyz"<<handlerFunc;
 		handlerId = ++handlerIdCounter;
 	}
 
 	// copy constructor
 	event_handler(const event_handler& src)
-		: handlerFunc(src.handlerFunc), handlerId(src.handlerId)
+		: handlerFunc(src.handlerFunc), handlerId(src.handlerId), conditionFunc(src.conditionFunc)
 	{
 	}
 
 	// move constructor
 	event_handler(event_handler&& src)
-		: handlerFunc(std::move(src.handlerFunc)), handlerId(src.handlerId)
+		: handlerFunc(std::move(src.handlerFunc)), handlerId(src.handlerId), conditionFunc(src.conditionFunc)
 	{
 	}
 
@@ -40,6 +44,7 @@ public:
 	{
 		handlerFunc = src.handlerFunc;
 		handlerId = src.handlerId;
+		conditionFunc = src.conditionFunc;
 
 		return *this;
 	}
@@ -48,6 +53,7 @@ public:
 	event_handler& operator=(event_handler&& src)
 	{
 		std::swap(handlerFunc, src.handlerFunc);
+		std::swap(conditionFunc, src.conditionFunc);
 		handlerId = src.handlerId;
 
 		return *this;
@@ -142,9 +148,9 @@ public:
 		return handler.id();
 	}
 
-	typename handler_type::handler_id_type add(const typename handler_type::handler_func_type& handler)
+	typename handler_type::handler_id_type add(const typename handler_type::handler_func_type& handler,const typename handler_type::condition_func_type& conditionFunc)
 	{
-		return add(handler_type(handler));
+		return add(handler_type(handler,conditionFunc));
 	}
 
 	bool remove(const handler_type& handler)
@@ -201,7 +207,9 @@ protected:
 	{
 		for (const auto& handler : handlers)
 		{
-			handler(params...);
+			if (handler.conditionFunc(params...)){
+				handler(params...);
+			}
 		}
 	}
 
